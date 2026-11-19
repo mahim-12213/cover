@@ -2,6 +2,35 @@
 // Add more students like:  ['25010607','Student Name'],
 window.STUDENTS={
   'eee|2024-25':[
-    ['25010606','Masrafi Islam Mahim']
+    ['25010602','Md. Hamjala'],
+    ['25010603','Shahriar Shadman'],
+    ['25010604','Ushana Barman'],
+    ['25010605','Mehedi Hasan'],
+    ['25010606','Masrafi Islam Mahim'],
+    ['25010607','Md. Atikur'],
+    ['25010608','Rafiul Siddeq Tamim'],
+    ['25010609','Al-Amin'],
+    ['25010610','Sadia Afrin'],
+    ['25010611','Kawsar Alam'],
+    ['25010613','Md. Kamrul Hasan'],
+    ['25010614','Papon Kumar Mondol Joy'],
+    ['25010615','Md. Nahid Hasan'],
+    ['25010616','Tania Akhter'],
+    ['25010617','Ummay Habiba Ruku'],
+    ['25010618','Md. Jahidul Islam'],
+    ['25010619','Mst. Hafeza Khatun'],
+    ['25010620','Md. Shakib Uddin'],
+    ['25010622','Md. Solaiman Hossen'],
+    ['25010623','Md. Ashraf Siddikey'],
+    ['25010625','Tashfin Ahmed'],
+    ['25010626','Imrul Kays'],
+    ['25010627','Md. Maruf Hossen'],
+    ['25010628','Akib Ahammed Pathan'],
+    ['25010629','Kamruzzaman'],
+    ['25010630','Saidul Islam'],
+    ['25010631','Arghya Das'],
+    ['25010632','Sadman Tahmid Himu'],
+    ['24010606','Mehedi Hasan Emon'],
+    ['24010610','Simanto Shanal']
   ]
 };
