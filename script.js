@@ -159,5 +159,20 @@ const DESIGS=['Professor','Associate Professor','Assistant Professor','Lecturer'
     it=>{$(nId).value=it.t[0];$(dId).value=it.t[1];fire($(nId));fire($(dId));},true);
   suggest($(dId),q=>{const l=q.toLowerCase();return DESIGS.filter(d=>!l||d.toLowerCase().includes(l)).map(d=>({main:d}));},it=>{$(dId).value=it.main;fire($(dId));},true);
 });
+/* ---- session suggestions + student ID -> name (by department & session) ---- */
+const SESSIONS=['2020-21','2021-22','2022-23','2023-24','2024-25','2025-26'];
+const ST=window.STUDENTS||{};
+const sessKey=x=>{const m=String(x).match(/(\d{4})\D+(\d{2,4})/);return m?m[1]+'-'+m[2].slice(-2):''};
+const batch=()=>ST[deptKey()+'|'+sessKey(val('session'))]||[];
+['session','iSession'].forEach(id=>suggest($(id),q=>{const l=q.replace(/\s/g,'');return SESSIONS.filter(x=>!l||x.includes(l)||sessKey(l)===x).map(x=>({main:x}));},it=>{$(id).value=it.main;fire($(id));},true));
+[['id','name'],['iId','iName']].forEach(([iId,nId])=>{
+  const I=$(iId),N=$(nId);let lastAuto='';
+  const fill=st=>{I.value=st[0];N.value=st[1];lastAuto=st[1];fire(I);fire(N);};
+  suggest(I,q=>{const B=batch();if(!B.length)return[];const l=q.toLowerCase();
+    return B.filter(x=>!l||x[0].includes(l)||x[1].toLowerCase().includes(l)).slice(0,q?12:40).map(x=>({main:x[0],sub:x[1],st:x}));},it=>fill(it.st),true);
+  I.addEventListener('input',()=>{const B=batch();if(!B.length)return;const m=B.find(x=>x[0]===I.value.trim());
+    if(m&&(!N.value.trim()||N.value===lastAuto)){N.value=m[1];lastAuto=m[1];fire(N);}
+    else if(!m&&lastAuto&&N.value===lastAuto){N.value='';lastAuto='';fire(N);}});
+});
 window.addEventListener('resize',fit);
 load();renderColEditor();renderRowEditor();render();
