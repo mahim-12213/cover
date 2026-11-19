@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JSTU Cover &amp; Index Generator</title>
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="view-edit">
+<header class="top"><img src="assets/site-logo.png" alt="Logo"><div><h1>JSTU Cover &amp; Index Generator</h1></div></header>
+<main class="layout">
+<section class="panel">
+  <div class="tabs"><button class="tab on" data-t="cover">Cover Page</button><button class="tab" data-t="index">Index Page</button></div>
+
+  <div id="t-cover">
+    <div class="grid3">
+      <label>Cover type<select id="type"><option value="lab">Lab Report</option><option value="assignment">Assignment</option></select></label>
+      <label>Design<select id="style"><option value="standard">Standard</option><option value="modern">Modern</option><option value="border">Bordered</option></select></label>
+      <label>Accent color<input type="color" id="accent" value="#000000"></label>
+    </div>
+    <details open><summary>Course</summary>
+      <label>Department<input id="dept" value="Department of Electrical and Electronic Engineering"></label>
+      <div class="grid2"><label>Course name<input id="courseTitle"></label>
+      <label>Course code<input id="courseCode"></label></div>
+      <div class="grid2"><label><span id="noLabel">Experiment No</span><input id="topicNo"></label>
+      <label><span id="nameLabel">Experiment Name</span><input id="topicName"></label></div>
+      <div class="grid2"><label class="labonly">Date of Experiment<input type="date" id="expDate"></label>
+      <label>Submission Date<input type="date" id="subDate"></label></div>
+    </details>
+    <details open><summary>Submitted By</summary>
+      <div class="grid2"><label>Name<input id="name"></label><label>ID<input id="id"></label></div>
+      <div class="grid3"><label>Session<input id="session"></label><label>Year / Semester<input id="yearSem"></label><label>Section<input id="section"></label></div>
+      <label>Group members (optional, one per line)<textarea id="members" rows="3"></textarea></label>
+    </details>
+    <details open><summary>Submitted To</summary>
+      <div class="grid2"><label>Teacher name<input id="teacherName"></label><label>Designation<input id="designation"></label></div>
+      <label>Teacher's department<input id="teacherDept" value="Dept. of Electrical and Electronic Engineering"></label>
+    </details>
+    <details open><summary>Move Submitted boxes up / down</summary>
+      <label>Position <span id="bcL">0 px</span><input type="range" id="boxUpC" min="-220" max="64" value="0"></label>
+      <div class="ends"><span>⬇ Down</span><button class="link" id="rstC">Reset</button><span>Up ⬆</span></div>
+    </details>
+  </div>
+
+  <div id="t-index" style="display:none">
+    <details open><summary>Index details</summary>
+      <label>Department<input id="idxDepartment"></label>
+      <div class="grid2"><label>Course title<input id="idxCourse"></label>
+      <label>Course code<input id="idxCode"></label></div>
+    </details>
+    <details open><summary>Table</summary>
+      <div class="grid2"><label>Table style<select id="idxStyle"><option value="classic">Classic</option><option value="modern">Modern</option><option value="minimal">Minimal</option></select></label>
+      <label>Number of rows<input type="number" id="rowCount" min="1" max="40" value="6" inputmode="numeric"></label></div>
+      <div id="hint" class="hint"></div>
+      <b class="sub">Columns (tick to show, edit title)</b>
+      <div id="colEditor"></div>
+      <label>Accent color<input type="color" id="idxAccent" value="#08785e"></label>
+      <label>Font size <span id="fsL">15 px</span><input type="range" id="idxFS" min="11" max="22" value="15"></label>
+      <label>Row height <span id="rhL">40 px</span><input type="range" id="idxRH" min="28" max="80" value="40"></label>
+    </details>
+    <details open><summary>Submitted By / To (bottom of index)</summary>
+      <label>Show boxes at bottom<select id="idxBox"><option value="1">Yes</option><option value="0">No</option></select></label>
+      <div class="hint">Same as the Cover — editing here also updates the Cover.</div>
+      <div class="grid2"><label>Name<input id="iName"></label><label>ID<input id="iId"></label></div>
+      <div class="grid2"><label>Session<input id="iSession"></label><label>Section<input id="iSection"></label></div>
+      <div class="grid2"><label>Teacher name<input id="iTeacher"></label><label>Designation<input id="iDesig"></label></div>
+      <label>Teacher's department<input id="iTDept"></label>
+      <label>Move boxes up / down <span id="biL">0 px</span><input type="range" id="boxUpI" min="-28" max="380" value="0"></label>
+      <div class="ends"><span>⬇ Down</span><button class="link" id="rstI">Reset</button><span>Up ⬆</span></div>
+    </details>
+    <details open><summary>Fill the rows</summary>
+      <div id="rowEditor"></div>
+      <button class="btn alt full" id="addRow">+ Add row</button>
+    </details>
+  </div>
+
+  <div class="btns">
+    <button class="btn" id="pdf">Download PDF</button>
+    <button class="btn alt" id="print">Print</button><button class="btn alt" id="share">Share</button><button class="btn ghost" id="reset">Reset</button>
+  </div>
+</section>
+
+<section class="preview">
+  <div class="tabs ptabs"><button class="tab on" data-t="cover">Cover Page</button><button class="tab" data-t="index">Index Page</button></div>
+  <div id="wrap-cover" class="wrap"><div id="cover" class="page"></div></div>
+  <div id="wrap-index" class="wrap" style="display:none"><div id="index" class="page"></div></div>
+</section>
+</main>
+<div class="mbar"><button id="mEdit" class="on">✏️ Edit</button><button id="mPrev">👁 Preview</button><button id="mPdf" class="go">⬇ PDF</button><button id="mShare" class="go">↗ Share</button></div>
+<div id="busy" class="busy">Creating file…</div>
+<div id="ready" class="busy"><b>PDF is ready</b><div><button class="btn" id="readyShare">Share</button> <button class="btn ghost" id="readyClose">Close</button></div></div>
+<footer class="site-footer">Developed by <strong>Masrafi Islam Mahim</strong>, EEE-06 (24-25)</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="logo.js"></script>
+<script src="courses.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
