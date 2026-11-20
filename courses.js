@@ -92,3 +92,28 @@ DEPT_COURSES.fish=[
 ["FISH 4231","Marine Fisheries Management"],["FISH 4232","Marine Fisheries Management"],
 ["FISH 4241","Fisheries Inspection and Legislation"],["FISH 4260","Internship"]
 ];
+
+DEPT_COURSES.sw=[
+["BSW 1101","History and Philosophy of Social Welfare"],["BSW 1102","Introduction to Social Work"],["BSW 1103","Principles of Economics"],
+["BSW 1104","Sociological Knowledge in Social Work Practice"],["BSW 1105","Functional English for Social Work Professionals"],
+["BSW 1106","Functional English for Social Work Professionals (Lab)"],["BSW 1107","Community Visit"],
+["BSW 1201","Human Growth: Physiological Aspects"],["BSW 1202","Bangladesh Studies: History, Heritage and Culture"],
+["BSW 1203","Disability and Social Work Intervention"],["BSW 1204","Political Science for Social Workers"],
+["BSW 1205","Computer Applications for Social Work Practice"],["BSW 1206","Computer Applications for Social Work Practice (Lab)"],["BSW 1207","Viva-Voce"],
+["BSW 2101","Social Action, Social Reform, and Social Change"],["BSW 2102","Social Work With Individuals"],
+["BSW 2103","Human Behavior: Social and Psychological Aspects"],["BSW 2104","Social Problems Analysis"],
+["BSW 2105","Voluntary Social Services and NGOs in Bangladesh"],["BSW 2106","Gender Issues and Women Empowerment"],["BSW 2107","Agency Visit"],
+["BSW 2201","Social Work with Groups"],["BSW 2202","Social Work with Communities"],["BSW 2203","Social Development and Social Work"],
+["BSW 2204","Rural and Urban Development in Bangladesh"],["BSW 2205","Social Policy and Planning"],
+["BSW 2206","Social Work with Families and Children"],["BSW 2207","Viva-Voce"],
+["BSW 3101","Human Rights, Social Justice and Social Work"],["BSW 3102","Demographic Issues and Social Work Intervention"],
+["BSW 3103","Social Welfare Services in Bangladesh"],["BSW 3104","Theoretical Perspectives of Social Work"],
+["BSW 3105","Criminology and Correctional Services"],["BSW 3106","Introduction to Social Research"],["BSW 3107","Field Mapping and Survey"],
+["BSW 3201","Social Legislations in Bangladesh"],["BSW 3202","Public Health: Social and Behavioral Aspects"],
+["BSW 3203","Climate Change and Disaster Management"],["BSW 3204","Social Research: Qualitative & Quantitative Approach"],
+["BSW 3205","Application of Statistics in Social Research"],["BSW 3206","Counseling and Psychiatric Social Work"],["BSW 3207","Viva-Voce"],
+["BSW 4101","Social Welfare Administration"],["BSW 4102","Strategies in Social Work Practice"],["BSW 4103","Project Planning and Practice"],
+["BSW 4104","International Social Work"],["BSW 4105","Field Work Education"],["BSW 4106","Comprehensive"],["BSW 4107","Field Visit and Seminar"],
+["BSW 4201","Practice Research"],["BSW 4202","Internship / Field Practicum"],
+["BSW 4203","Viva-Voce on Theory Courses"],["BSW 4204","Viva-Voce on Practical Courses"]
+];
