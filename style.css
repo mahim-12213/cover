@@ -98,3 +98,9 @@ label{position:relative}
 .sg div:hover,.sg div:active{background:#e9f5f0}.sg div b{display:block;font-weight:700}.sg div small{display:block;color:#6a7871;font-size:.76rem;margin-top:1px}
 
 #ready{text-align:center}#ready .btn{margin:12px 4px 0}
+
+/* locks */
+.lock{font-size:.78rem;color:#9a5b12;background:#fff6e8;border:1px solid #f3dcb4;border-radius:8px;padding:8px 10px;margin:4px 0 10px}
+input:disabled,textarea:disabled,select:disabled{background:#eef2f0!important;color:#9aa6a0!important;cursor:not-allowed}
+button:disabled{opacity:.5;cursor:not-allowed}
+#cover .dept{min-height:36px}#index .hd .d{min-height:22px}
