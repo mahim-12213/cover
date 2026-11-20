@@ -20,7 +20,8 @@
       <label>Accent color<input type="color" id="accent" value="#000000"></label>
     </div>
     <details open><summary>Course</summary>
-      <label>Department<input id="dept" value="Department of Electrical and Electronic Engineering"></label>
+      <label>Department<input id="dept"></label>
+      <div class="lock" data-lock="c">🔒 Select the department first to unlock the fields below.</div>
       <div class="grid2"><label>Course name<input id="courseTitle"></label>
       <label>Course code<input id="courseCode"></label></div>
       <div class="grid2"><label><span id="noLabel">Experiment No</span><input id="topicNo"></label>
@@ -29,13 +30,16 @@
       <label>Submission Date<input type="date" id="subDate"></label></div>
     </details>
     <details open><summary>Submitted By</summary>
+      <div class="grid2"><label>Session<input id="session"></label><label>Year / Semester<input id="yearSem"></label></div>
+      <div class="lock" data-lock="s">🔒 Select the session first to type Name and ID.</div>
       <div class="grid2"><label>Name<input id="name"></label><label>ID<input id="id"></label></div>
-      <div class="grid3"><label>Session<input id="session"></label><label>Year / Semester<input id="yearSem"></label><label>Section<input id="section"></label></div>
+      <label>Section<input id="section"></label>
       <label>Group members (optional, one per line)<textarea id="members" rows="3"></textarea></label>
     </details>
     <details open><summary>Submitted To</summary>
+      <label>Teacher's department<input id="teacherDept"></label>
+      <div class="lock" data-lock="t">🔒 Select the teacher's department first to type the teacher name.</div>
       <div class="grid2"><label>Teacher name<input id="teacherName"></label><label>Designation<input id="designation"></label></div>
-      <label>Teacher's department<input id="teacherDept" value="Dept. of Electrical and Electronic Engineering"></label>
     </details>
     <details open><summary>Move Submitted boxes up / down</summary>
       <label>Position <span id="bcL">0 px</span><input type="range" id="boxUpC" min="-220" max="64" value="0"></label>
@@ -46,6 +50,7 @@
   <div id="t-index" style="display:none">
     <details open><summary>Index details</summary>
       <label>Department<input id="idxDepartment"></label>
+      <div class="lock" data-lock="c">🔒 Select the department first to unlock the fields below.</div>
       <div class="grid2"><label>Course title<input id="idxCourse"></label>
       <label>Course code<input id="idxCode"></label></div>
     </details>
@@ -62,14 +67,18 @@
     <details open><summary>Submitted By / To (bottom of index)</summary>
       <label>Show boxes at bottom<select id="idxBox"><option value="1">Yes</option><option value="0">No</option></select></label>
       <div class="hint">Same as the Cover — editing here also updates the Cover.</div>
-      <div class="grid2"><label>Name<input id="iName"></label><label>ID<input id="iId"></label></div>
       <div class="grid2"><label>Session<input id="iSession"></label><label>Section<input id="iSection"></label></div>
-      <div class="grid2"><label>Teacher name<input id="iTeacher"></label><label>Designation<input id="iDesig"></label></div>
+      <div class="lock" data-lock="s">🔒 Select the session first to type Name and ID.</div>
+      <div class="grid2"><label>Name<input id="iName"></label><label>ID<input id="iId"></label></div>
       <label>Teacher's department<input id="iTDept"></label>
+      <div class="lock" data-lock="t">🔒 Select the teacher's department first to type the teacher name.</div>
+      <div class="grid2"><label>Teacher name<input id="iTeacher"></label><label>Designation<input id="iDesig"></label></div>
       <label>Move boxes up / down <span id="biL">0 px</span><input type="range" id="boxUpI" min="-28" max="380" value="0"></label>
       <div class="ends"><span>⬇ Down</span><button class="link" id="rstI">Reset</button><span>Up ⬆</span></div>
     </details>
     <details open><summary>Fill the rows</summary>
+      <label>Auto-fill from Cover<select id="idxAuto"><option value="1">On</option><option value="0">Off</option></select></label>
+      <div class="hint">On: the experiment you type on the Cover is added to this table automatically. Page No / Remarks you can type here.</div>
       <div id="rowEditor"></div>
       <button class="btn alt full" id="addRow">+ Add row</button>
     </details>
