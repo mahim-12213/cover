@@ -1,12 +1,13 @@
 const $=id=>document.getElementById(id);
 const C=['type','style','accent','dept','courseTitle','courseCode','topicNo','topicName','expDate','subDate','name','id','session','yearSem','section','members','teacherName','designation','teacherDept','boxUpC'];
-const X=['idxStyle','idxAccent','idxFS','idxRH','rowCount','idxBox','boxUpI'];
+const X=['idxStyle','idxAccent','idxFS','idxRH','rowCount','idxBox','boxUpI','idxAuto'];
 const MIR=[['dept','idxDepartment'],['courseTitle','idxCourse'],['courseCode','idxCode'],['name','iName'],['id','iId'],['session','iSession'],['section','iSection'],['teacherName','iTeacher'],['designation','iDesig'],['teacherDept','iTDept']];
 const ALL=C.concat(X),DEF={};ALL.forEach(k=>DEF[k]=$(k).value);
 const COLS0=[{k:'sl',t:'SL No',on:true},{k:'name',t:'Experiment / Topic Name',on:true},{k:'exp',t:'Date of Experiment',on:false},{k:'sub',t:'Date of Submission',on:false},{k:'page',t:'Page No',on:true},{k:'rem',t:'Remarks',on:false}];
 const W={sl:9,name:46,exp:16,sub:16,page:14,rem:20},KEY='jstuCover6';
 const LOGO=window.LOGO||'assets/logo.jpg',UNI='Jamalpur Science &amp; Technology University';
 let rows=[],cols=JSON.parse(JSON.stringify(COLS0)),active='cover',idxLogo=LOGO;
+let curUid=null,uidN=0;
 const val=k=>$(k).value.trim();
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const fdL=v=>v?new Date(v+'T00:00').toLocaleDateString('en-GB',{day:'2-digit',month:'long',year:'numeric'}):'';
@@ -18,9 +19,9 @@ function boxesHTML(){
   const L=t=>t?`<div>${t}</div>`:'';
   const ys=[esc(val('yearSem')),val('section')&&'Section: '+esc(val('section'))].filter(Boolean).join(', ');
   return `<div class="box"><h4>Submitted by :</h4><div class="nm">${esc(val('name'))}</div>
-    ${L(val('id')&&'ID: '+esc(val('id')))}${L(val('session')&&'Session: '+esc(val('session')))}${L(ys)}${mem?`<small>${mem}</small>`:''}<div>${esc(val('dept'))}</div><div>${UNI}</div></div>
+    ${L(val('id')&&'ID: '+esc(val('id')))}${L(val('session')&&'Session: '+esc(val('session')))}${L(ys)}${mem?`<small>${mem}</small>`:''}${L(esc(val('dept')))}<div>${UNI}</div></div>
   <div class="box"><h4>Submitted to :</h4><div class="nm">${esc(val('teacherName'))}</div>
-    ${L(val('designation')&&esc(val('designation')))}<div>${esc(val('teacherDept'))}</div><div>${UNI}</div></div>`;
+    ${L(val('designation')&&esc(val('designation')))}${L(esc(val('teacherDept')))}<div>${UNI}</div></div>`;
 }
 function renderCover(){
   const v={};C.forEach(k=>v[k]=val(k));const lab=v.type==='lab';
@@ -69,11 +70,11 @@ function renderRowEditor(){
 const blank=()=>({name:'',exp:'',sub:'',page:'',rem:''});
 function mirror(){MIR.forEach(([a,b])=>$(b).value=$(a).value);}
 function setRows(n){n=Math.min(40,Math.max(1,n||1));while(rows.length<n)rows.push(blank());rows.length=n;$('rowCount').value=n;renderRowEditor();renderIndex();save();}
-function save(){try{const f={};ALL.forEach(k=>f[k]=$(k).value);localStorage.setItem(KEY,JSON.stringify({f,rows,cols}))}catch(e){}}
+function save(){try{const f={};ALL.forEach(k=>f[k]=$(k).value);localStorage.setItem(KEY,JSON.stringify({f,rows,cols,cur:curUid}))}catch(e){}}
 function load(){let s={};try{s=JSON.parse(localStorage.getItem(KEY))||{}}catch(e){}
   ALL.forEach(k=>$(k).value=s.f&&s.f[k]!==undefined?s.f[k]:DEF[k]);mirror();
-  if(s.cols&&s.cols.length===6)cols=s.cols;rows=s.rows&&s.rows.length?s.rows:Array.from({length:6},blank);$('rowCount').value=rows.length;}
-function render(){renderCover();renderIndex();save();fit();}
+  curUid=s.cur||null;if(s.cols&&s.cols.length===6)cols=s.cols;rows=s.rows&&s.rows.length?s.rows:Array.from({length:6},blank);$('rowCount').value=rows.length;}
+function render(){renderCover();renderIndex();applyLocks();save();fit();}
 function fit(){document.querySelectorAll('.wrap').forEach(w=>{w.style.transform='';w.style.height=''});
   const a=document.querySelector('.preview').clientWidth;if(a<=0)return;
   const w=$('wrap-'+active),s=Math.min(1,a/794);w.style.transform=`scale(${s})`;w.style.height=(1123*s)+'px';}
@@ -118,25 +119,55 @@ $('pdf').onclick=()=>pdf([active],nm());$('mPdf').onclick=()=>pdf([active],nm())
 $('print').onclick=()=>window.print();$('share').onclick=shareIt;$('mShare').onclick=shareIt;
 $('reset').onclick=()=>{if(confirm('Reset everything?')){localStorage.removeItem(KEY);cols=JSON.parse(JSON.stringify(COLS0));idxLogo=LOGO;load();renderColEditor();renderRowEditor();render();}};
 
+/* ---- Index auto-fill from Cover ---- */
+const newUid=()=>'u'+Date.now().toString(36)+(uidN++);
+const isBlankRow=r=>!r.uid&&!r.name&&!r.exp&&!r.sub&&!r.page&&!r.rem;
+const autoOn=()=>$('idxAuto').value==='1';
+function curRow(create){
+  let r=rows.find(x=>x.uid&&x.uid===curUid);
+  if(!r&&create){
+    if(!curUid)curUid=newUid();
+    r=rows.find(isBlankRow);
+    if(r)r.uid=curUid;
+    else{if(rows.length>=40)return null;r=blank();r.uid=curUid;rows.push(r);}
+    $('rowCount').value=rows.length;
+  }
+  return r||null;
+}
+const FM={topicName:'name',expDate:'exp',subDate:'sub'};
+function syncCover(id){
+  if(!autoOn())return;
+  const v=$(id).value;
+  let r=curRow(false);
+  if(!r){if(!val('topicName')&&!(id==='topicName'&&v.trim()))return;r=curRow(true);if(!r)return;
+    r.name=val('topicName');r.exp=$('expDate').value;r.sub=$('subDate').value;}
+  r[FM[id]]=id==='topicName'?v.trim():v;
+  renderRowEditor();renderIndex();save();
+}
+['topicName','expDate','subDate'].forEach(id=>{$(id).addEventListener('input',()=>syncCover(id));$(id).addEventListener('change',()=>syncCover(id));});
+$('idxAuto').addEventListener('change',()=>{if(autoOn()&&val('topicName')){const r=curRow(true);if(r){r.name=val('topicName');r.exp=$('expDate').value;r.sub=$('subDate').value;}}renderRowEditor();renderIndex();save();});
+
 /* ---- suggestions: department + EEE course code/title ---- */
 const DEPTS=['Department of Electrical and Electronic Engineering','Department of Computer Science and Engineering','Department of Fisheries','Department of Geology','Department of Mathematics','Department of Management','Department of Social Work'];
-const DC=window.DEPT_COURSES||{},deptKey=()=>{const d=val('dept');return /electrical and electronic/i.test(d)?'eee':/fisheries/i.test(d)?'fish':''},COURSES_NOW=()=>DC[deptKey()]||[];
+const DC=window.DEPT_COURSES||{},deptKey=()=>{const d=val('dept');return /electrical and electronic/i.test(d)?'eee':/fisheries/i.test(d)?'fish':/social work/i.test(d)?'sw':''},COURSES_NOW=()=>DC[deptKey()]||[];
 const norm=s=>String(s).replace(/\s+/g,'').toUpperCase();
-function suggest(inp,getItems,onPick,onFocusAll){
+let quiet=false;
+function suggest(inp,getItems,onPick,onFocusAll,skipFocus){
   const box=document.createElement('div');box.className='sg';inp.parentNode.appendChild(box);
   const show=all=>{const items=getItems(all?'':inp.value.trim());if(!items.length){box.style.display='none';return;}
     box._items=items;box.innerHTML=items.map((it,i)=>`<div data-i="${i}"><b>${esc(it.main)}</b>${it.sub?`<small>${esc(it.sub)}</small>`:''}</div>`).join('');box.style.display='block';};
-  inp.addEventListener('focus',()=>show(onFocusAll));inp.addEventListener('input',()=>show(false));
+  inp.addEventListener('focus',()=>{if(skipFocus&&skipFocus()){box.style.display='none';return;}show(onFocusAll);});
+  inp.addEventListener('input',()=>{if(quiet){box.style.display='none';return;}show(false);});
   inp.addEventListener('blur',()=>setTimeout(()=>box.style.display='none',160));
   box.addEventListener('mousedown',e=>{const d=e.target.closest('[data-i]');if(!d)return;e.preventDefault();onPick(box._items[+d.dataset.i]);box.style.display='none';});
 }
-const fire=el=>el.dispatchEvent(new Event('input',{bubbles:true}));
+const fire=el=>{quiet=true;try{el.dispatchEvent(new Event('input',{bubbles:true}));}finally{quiet=false;}};
 ['dept','idxDepartment','teacherDept','iTDept'].forEach(id=>suggest($(id),q=>DEPTS.filter(d=>!q||d.toLowerCase().includes(q.toLowerCase())).map(d=>({main:d})),it=>{$(id).value=it.main;fire($(id));},true));
 [['courseTitle','courseCode'],['idxCourse','idxCode']].forEach(([tId,cId])=>{
   const T=$(tId),Cd=$(cId);let lastAuto='';
   const fill=co=>{Cd.value=co[0];T.value=co[1];lastAuto=co[1];fire(Cd);fire(T);};
-  suggest(Cd,q=>{const L=COURSES_NOW();if(!L.length||!q)return[];const n=norm(q);return L.filter(c=>norm(c[0]).includes(n)||c[1].toLowerCase().includes(q.toLowerCase())).slice(0,10).map(c=>({main:c[0],sub:c[1],co:c}));},it=>fill(it.co),false);
-  suggest(T,q=>{const L=COURSES_NOW();if(!L.length||!q)return[];const l=q.toLowerCase();return L.filter(c=>c[1].toLowerCase().includes(l)||norm(c[0]).includes(norm(q))).slice(0,10).map(c=>({main:c[1],sub:c[0],co:c}));},it=>fill(it.co),false);
+  suggest(Cd,q=>{const L=COURSES_NOW();if(!L.length||!q)return[];const n=norm(q);return L.filter(c=>norm(c[0]).includes(n)||c[1].toLowerCase().includes(q.toLowerCase())).slice(0,10).map(c=>({main:c[0],sub:c[1],co:c}));},it=>fill(it.co),false,()=>COURSES_NOW().some(c=>norm(c[0])===norm(Cd.value)));
+  suggest(T,q=>{const L=COURSES_NOW();if(!L.length||!q)return[];const l=q.toLowerCase();return L.filter(c=>c[1].toLowerCase().includes(l)||norm(c[0]).includes(norm(q))).slice(0,10).map(c=>({main:c[1],sub:c[0],co:c}));},it=>fill(it.co),false,()=>COURSES_NOW().some(c=>c[1].toLowerCase()===T.value.trim().toLowerCase()));
   Cd.addEventListener('input',()=>{const L=COURSES_NOW();if(!L.length)return;const m=L.find(c=>norm(c[0])===norm(Cd.value));
     if(m&&(!T.value.trim()||T.value===lastAuto)){T.value=m[1];lastAuto=m[1];fire(T);}
     else if(!m&&lastAuto&&T.value===lastAuto){T.value='';lastAuto='';fire(T);}});
@@ -174,5 +205,14 @@ const batch=()=>ST[deptKey()+'|'+sessKey(val('session'))]||[];
     if(m&&(!N.value.trim()||N.value===lastAuto)){N.value=m[1];lastAuto=m[1];fire(N);}
     else if(!m&&lastAuto&&N.value===lastAuto){N.value='';lastAuto='';fire(N);}});
 });
+/* ---- locks: department -> course fields, session -> name/ID, teacher department -> teacher ---- */
+const normD=x=>String(x).trim().replace(/^dept\.?\s+of\s+/i,'Department of ').toLowerCase();
+const deptOK=x=>DEPTS.some(d=>d.toLowerCase()===normD(x));
+const LOCKS={c:['courseTitle','courseCode','topicNo','topicName','expDate','subDate','idxCourse','idxCode'],s:['name','id','iName','iId'],t:['teacherName','designation','iTeacher','iDesig']};
+function applyLocks(){
+  const ok={c:deptOK(val('dept')),s:!!sessKey(val('session')),t:deptOK(val('teacherDept'))};
+  for(const k in LOCKS){LOCKS[k].forEach(id=>{$(id).disabled=!ok[k];});
+    document.querySelectorAll('[data-lock="'+k+'"]').forEach(e=>{e.style.display=ok[k]?'none':'';});}
+}
 window.addEventListener('resize',fit);
 load();renderColEditor();renderRowEditor();render();
