@@ -23,6 +23,23 @@ function boxesHTML(){
   <div class="box"><h4>Submitted to :</h4><div class="nm">${esc(val('teacherName'))}</div>
     ${L(val('designation')&&esc(val('designation')))}${L(esc(val('teacherDept')))}<div>${UNI}</div></div>`;
 }
+const UNI2='Jamalpur Science and Technology University';
+function roundedHTML(v,lab,up){
+  const mem=v.members?v.members.split('\n').filter(Boolean).map(esc).join('\n'):'';
+  const ys=[esc(v.yearSem),v.section&&'Section: '+esc(v.section)].filter(Boolean).join(', ');
+  const R=(l,t)=>t?`<div><b>${l}</b> ${t}</div>`:'';
+  const noL=lab?'Experiment No:':'Assignment No:';
+  return `<img class="logo" src="${LOGO}" alt="">
+  <div class="ru" style="font-size:${fitFs(UNI2.length,32,690)}px">${UNI2}</div>
+  <div class="rp">${lab?'A Lab Report on':'An Assignment on'}</div>
+  ${v.topicName?`<div class="rt">\u2018\u2019 ${esc(v.topicName)} \u2019\u2019</div>`:''}
+  <div class="rd" style="font-size:${fitFs(v.dept.length,30,660)}px">${esc(v.dept)}</div>
+  <div class="rc"><div><b><u>Course Title:</u></b> <b>${esc(v.courseTitle)}</b></div><div><b><u>Course Code:</u></b> ${esc(v.courseCode)}</div>${v.topicNo?`<div><b><u>${noL}</u></b> ${esc(v.topicNo)}</div>`:''}</div>
+  <div class="rbs" style="margin-top:${Math.max(0,64-up)}px">
+    <div class="rbx r1"><h4>Submitted to</h4><div>${esc(v.teacherName)}</div>${v.designation?`<div>${esc(v.designation)}</div>`:''}${v.teacherDept?`<div>${esc(v.teacherDept)}</div>`:''}<div>${UNI2}</div></div>
+    <div class="rbx r2"><h4>Submitted By:</h4>${R('Name:',esc(v.name))}${R('Student ID:',esc(v.id))}${R('Session:',esc(v.session))}${ys?`<div>${ys}</div>`:''}${mem?`<small>${mem}</small>`:''}${lab&&v.expDate?R('Date of Experiment:',fdL(v.expDate)):''}${R('Submission Date:',fdL(v.subDate))}</div>
+  </div>`;
+}
 function renderCover(){
   const v={};C.forEach(k=>v[k]=val(k));const lab=v.type==='lab';
   $('noLabel').textContent=lab?'Experiment No':'Assignment No';
@@ -31,6 +48,7 @@ function renderCover(){
   const c=$('cover');c.className='page '+v.style;c.style.setProperty('--ac',v.accent);
   const exp=[v.topicNo&&(lab?'Experiment No: ':'Assignment No: ')+esc(v.topicNo),(lab?'Experiment Name: ':'Assignment Title: ')+esc(v.topicName)].filter(Boolean);
   const up=+v.boxUpC||0;$('bcL').textContent=up+' px';
+  if(v.style==='rounded'){c.style.setProperty('--rc',v.accent==='#000000'?'#70ad47':v.accent);c.innerHTML=roundedHTML(v,lab,up);return;}
   c.innerHTML=`
   <div class="dept" style="font-size:${fitFs(v.dept.length,30,v.style==='border'?640:660)}px">${esc(v.dept)}</div><div class="uni">${UNI}</div>
   <img class="logo" src="${LOGO}" alt=""><div class="type">${lab?'Lab Report':'Assignment'}</div>
@@ -149,8 +167,10 @@ $('idxAuto').addEventListener('change',()=>{if(autoOn()&&val('topicName')){const
 
 /* ---- suggestions: department + EEE course code/title ---- */
 const DEPTS=['Department of Electrical and Electronic Engineering','Department of Computer Science and Engineering','Department of Fisheries','Department of Geology','Department of Mathematics','Department of Management','Department of Social Work'];
-const DC=window.DEPT_COURSES||{},deptKey=()=>{const d=val('dept');return /electrical and electronic/i.test(d)?'eee':/fisheries/i.test(d)?'fish':/social work/i.test(d)?'sw':''},COURSES_NOW=()=>DC[deptKey()]||[];
-const norm=s=>String(s).replace(/\s+/g,'').toUpperCase();
+const DC=window.DEPT_COURSES||{},deptKey=()=>{const d=val('dept');return /electrical and electronic/i.test(d)?'eee':/fisheries/i.test(d)?'fish':/social work/i.test(d)?'sw':/computer science/i.test(d)?'cse':/geology/i.test(d)?'geo':/mathematics/i.test(d)?'math':/management/i.test(d)?'mgt':''},COURSES_NOW=()=>DC[deptKey()]||[];
+const norm=s=>String(s).replace(/[\s-]+/g,'').toUpperCase();
+const codeIs=(c,s)=>{const n=norm(s);return norm(c[0])===n||(!!c[2]&&norm(c[2])===n)};
+const codeHas=(c,n)=>norm(c[0]).includes(n)||(!!c[2]&&norm(c[2]).includes(n));
 let quiet=false;
 function suggest(inp,getItems,onPick,onFocusAll,skipFocus){
   const box=document.createElement('div');box.className='sg';inp.parentNode.appendChild(box);
@@ -166,9 +186,9 @@ const fire=el=>{quiet=true;try{el.dispatchEvent(new Event('input',{bubbles:true}
 [['courseTitle','courseCode'],['idxCourse','idxCode']].forEach(([tId,cId])=>{
   const T=$(tId),Cd=$(cId);let lastAuto='';
   const fill=co=>{Cd.value=co[0];T.value=co[1];lastAuto=co[1];fire(Cd);fire(T);};
-  suggest(Cd,q=>{const L=COURSES_NOW();if(!L.length||!q)return[];const n=norm(q);return L.filter(c=>norm(c[0]).includes(n)||c[1].toLowerCase().includes(q.toLowerCase())).slice(0,10).map(c=>({main:c[0],sub:c[1],co:c}));},it=>fill(it.co),false,()=>COURSES_NOW().some(c=>norm(c[0])===norm(Cd.value)));
-  suggest(T,q=>{const L=COURSES_NOW();if(!L.length||!q)return[];const l=q.toLowerCase();return L.filter(c=>c[1].toLowerCase().includes(l)||norm(c[0]).includes(norm(q))).slice(0,10).map(c=>({main:c[1],sub:c[0],co:c}));},it=>fill(it.co),false,()=>COURSES_NOW().some(c=>c[1].toLowerCase()===T.value.trim().toLowerCase()));
-  Cd.addEventListener('input',()=>{const L=COURSES_NOW();if(!L.length)return;const m=L.find(c=>norm(c[0])===norm(Cd.value));
+  suggest(Cd,q=>{const L=COURSES_NOW();if(!L.length||!q)return[];const n=norm(q);return L.filter(c=>codeHas(c,n)||c[1].toLowerCase().includes(q.toLowerCase())).slice(0,10).map(c=>({main:c[0],sub:c[1]+(c[2]?' (detailed syllabus: '+c[2]+')':''),co:c}));},it=>fill(it.co),false,()=>COURSES_NOW().some(c=>codeIs(c,Cd.value)));
+  suggest(T,q=>{const L=COURSES_NOW();if(!L.length||!q)return[];const l=q.toLowerCase();return L.filter(c=>c[1].toLowerCase().includes(l)||codeHas(c,norm(q))).slice(0,10).map(c=>({main:c[1],sub:c[0],co:c}));},it=>fill(it.co),false,()=>COURSES_NOW().some(c=>c[1].toLowerCase()===T.value.trim().toLowerCase()));
+  Cd.addEventListener('input',()=>{const L=COURSES_NOW();if(!L.length)return;const m=L.find(c=>codeIs(c,Cd.value));
     if(m&&(!T.value.trim()||T.value===lastAuto)){T.value=m[1];lastAuto=m[1];fire(T);}
     else if(!m&&lastAuto&&T.value===lastAuto){T.value='';lastAuto='';fire(T);}});
 });
@@ -199,8 +219,8 @@ const batch=()=>ST[deptKey()+'|'+sessKey(val('session'))]||[];
 [['id','name'],['iId','iName']].forEach(([iId,nId])=>{
   const I=$(iId),N=$(nId);let lastAuto='';
   const fill=st=>{I.value=st[0];N.value=st[1];lastAuto=st[1];fire(I);fire(N);};
-  suggest(I,q=>{const B=batch();if(!B.length)return[];const l=q.toLowerCase();
-    return B.filter(x=>!l||x[0].includes(l)||x[1].toLowerCase().includes(l)).slice(0,q?12:40).map(x=>({main:x[0],sub:x[1],st:x}));},it=>fill(it.st),true);
+  suggest(I,q=>{const B=batch(),d=q.replace(/\D/g,'');if(!B.length||d.length<6||d.length>8)return[];
+    return B.filter(x=>x[0].startsWith(d)).slice(0,40).map(x=>({main:x[0],st:x}));},it=>fill(it.st),false);
   I.addEventListener('input',()=>{const B=batch();if(!B.length)return;const m=B.find(x=>x[0]===I.value.trim());
     if(m&&(!N.value.trim()||N.value===lastAuto)){N.value=m[1];lastAuto=m[1];fire(N);}
     else if(!m&&lastAuto&&N.value===lastAuto){N.value='';lastAuto='';fire(N);}});
