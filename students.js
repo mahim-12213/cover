@@ -1,5 +1,4 @@
-// Student list by batch. Key format: '<department>|<session>'  (department: eee, fish, cse, ...; session: 2024-25)
-// Add more students like:  ['25010607','Student Name'],
+
 window.STUDENTS={
   'eee|2024-25':[
     ['25010602','Md. Hamjala'],
@@ -32,5 +31,38 @@ window.STUDENTS={
     ['25010632','Sadman Tahmid Himu'],
     ['24010606','Mehedi Hasan Emon'],
     ['24010610','Simanto Shanal']
+  ],
+  'eee|2025-26':[
+    ['26010601','Ovijit Paul'],
+    ['26010602','Md. Arif Rihan Emon'],
+    ['26010603','Md. Abu Bokar'],
+    ['26010604','Md. Rokibul Islam'],
+    ['26010605','Nadimur Rahman Ibn Nasir'],
+    ['26010606','Md. Nayeem Siddique'],
+    ['26010607','Md. Naim Islam'],
+    ['26010608','Mst. Nayma Jannat Tithi'],
+    ['26010609','Mst. Somiya Mostakime'],
+    ['26010610','Ataher Abid'],
+    ['26010611','Md. Rashedul Islam Rafi'],
+    ['26010612','Md. Ibrahim Hossain Munna'],
+    ['26010613','Md. Akash Shekh'],
+    ['26010614','Md. Sajid Hasan Syam'],
+    ['26010615','Md. Rashidul Islam'],
+    ['26010616','Md. Mominul Islam Shihab'],
+    ['26010617','Md. Mamun Or Roshid'],
+    ['26010618','Tasfia Jareen Anha'],
+    ['26010619','Md. Robin Khan'],
+    ['26010620','Imran Hasan'],
+    ['26010621','Farzana Tasnim'],
+    ['26010622','Raihan Ali Lalon'],
+    ['26010623','Anindya Chakraborty'],
+    ['26010624','Krishna Gopal Mitra'],
+    ['26010625','Md. Shakil Mia'],
+    ['26010626','Md. Muhaiminul Islam Arafat'],
+    ['26010627','Md. Rocky Hossain'],
+    ['26010628','Md. Mehedi Hasan'],
+    ['26010629','Md. Nahid Islam'],
+    ['26010630','Mst. Samira Shaznin Raiya'],
+    ['26010631','Md Ahad Miah']
   ]
 };
