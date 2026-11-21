@@ -1,4 +1,5 @@
-
+// Student list by batch. Key format: '<department>|<session>'  (department: eee, fish, cse, ...; session: 2024-25)
+// Add more students like:  ['25010607','Student Name'],
 window.STUDENTS={
   'eee|2024-25':[
     ['25010602','Md. Hamjala'],
@@ -64,5 +65,28 @@ window.STUDENTS={
     ['26010629','Md. Nahid Islam'],
     ['26010630','Mst. Samira Shaznin Raiya'],
     ['26010631','Md Ahad Miah']
+  ],
+  'geo|2024-25':[
+    ['25060702','Akash Chandra Das'],
+    ['25060703','Md. Moshfekur Rahman Khandaker'],
+    ['25060704','Md. Oli Ullah'],
+    ['25060705','Israt Jahan Moon'],
+    ['25060708','Md. Nayeem Hossain'],
+    ['25060710','Faza Tasnim Nisho'],
+    ['25060714','Niloy Kumar Das'],
+    ['25060715','Riadul Jannat Riad'],
+    ['25060717','Md. Abdul Azim'],
+    ['25060718','Md. Rauzul Islam'],
+    ['25060719','Md. Najim Shek'],
+    ['25060721','Mst. Shrabonty Akter Soha'],
+    ['25060722','Raisa Tasnim Lia'],
+    ['25060723','Md. Ali Basat Bin Bondhon'],
+    ['25060724','Yasir Istiak Abir'],
+    ['25060726','Rani Atker'],
+    ['25060727','Mst. Mim Khatun'],
+    ['25060729','Md. Rakibul Islam'],
+    ['25060730','Mst. Farzina Akter'],
+    ['24060724','Pallab Ghosh'],
+    ['24060725','Moudud Ahmed']
   ]
 };
